@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Base colors */
+  --color-black: 0 0 0;        /* #000000 */
+  --color-dark: 10 12 20;      /* #0A0C14 */
+  --color-navy: 26 31 53;      /* #1A1F35 */
+  --color-gold: 212 175 55;    /* #D4AF37 */
+  --color-gray: 26 28 35;      /* #1A1C23 */
+  
+  /* Theme colors */
+  --background: var(--color-black);
+  --foreground: 255 255 255;
+  --card: var(--color-dark);
+  --card-foreground: 255 255 255;
+  --popover: var(--color-dark);
+  --popover-foreground: 255 255 255;
+  --primary: var(--color-gold);
+  --primary-foreground: var(--color-black);
+  --secondary: var(--color-navy);
+  --secondary-foreground: 255 255 255;
+  --muted: var(--color-gray);
+  --muted-foreground: 229 229 229;
+  --accent: var(--color-gold);
+  --accent-foreground: var(--color-black);
+  --border: var(--color-navy);
+  --input: var(--color-gray);
+  --ring: var(--color-gold);
+  --radius: 0.5rem;
+
+  /* Chart colors */
+  --chart-1: var(--color-gold);
+  --chart-2: 255 255 255;
+  --chart-3: var(--color-navy);
+  --chart-4: var(--color-gray);
+  --chart-5: var(--color-dark);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-[rgb(var(--color-black))] text-white m-0 p-0;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html, body {
+    @apply h-full w-full overflow-x-hidden;
+  }
+  
+  #root {
+    @apply h-full w-full;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--color-dark));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--color-gold));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--color-gold) / 0.8);
+}
