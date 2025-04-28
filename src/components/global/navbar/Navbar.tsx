@@ -95,11 +95,10 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
       className={cn(
         "fixed w-full top-0 left-0 z-50 px-6 md:px-12 transition-all duration-300 ease-in-out",
         {
-          "bg-transparent": transparent && !scrolled && !isMenuOpen,
+          // Apply a black background only for mobile and keep transparency for desktop screens
+          "bg-black md:bg-transparent": !isMenuOpen && !scrolled, // Black background for mobile and transparent for desktop
           "bg-[rgb(var(--color-dark))] backdrop-blur-sm shadow-lg":
-            !transparent || scrolled || isMenuOpen,
-          // Add the black background for mobile screens
-          "bg-black md:bg-transparent": isMenuOpen || scrolled,
+            !transparent || scrolled || isMenuOpen, // For desktop or when scrolled
         }
       )}
     >
