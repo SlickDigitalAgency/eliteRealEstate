@@ -166,7 +166,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
               animate="open"
               exit="closed"
               variants={overlayVariants}
-              className="fixed inset-0 bg-black/40 md:hidden z-40"
+              className="fixed inset-0 bg-black/100 md:hidden z-40"
               onClick={() => setIsMenuOpen(false)}
             />
             <motion.div
