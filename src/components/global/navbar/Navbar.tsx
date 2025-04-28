@@ -98,6 +98,8 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
           "bg-transparent": transparent && !scrolled && !isMenuOpen,
           "bg-[rgb(var(--color-dark))] backdrop-blur-sm shadow-lg":
             !transparent || scrolled || isMenuOpen,
+          // Add the black background for mobile screens
+          "bg-black md:bg-transparent": isMenuOpen || scrolled,
         }
       )}
     >
