@@ -177,7 +177,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
               variants={menuVariants}
               className="fixed inset-y-0 right-0 w-[300px] bg-[rgb(var(--color-dark))] shadow-xl md:hidden z-40 flex flex-col"
             >
-              <div className="flex flex-col items-start p-6 h-full">
+              <div className="flex flex-col items-start p-6 h-full bg-black/100">
                 <div className="w-full space-y-6 mt-16">
                   {NAV_LINKS.map((link) => (
                     <NavLink
