@@ -17,26 +17,32 @@ const Testimonials: React.FC = () => {
 
     if (scrollContainer && container) {
       const scrollWidth = container.scrollWidth;
-      const containerWidth = container.offsetWidth;
+      const containerWidth = scrollContainer.offsetWidth;
 
-      gsap.to(container, {
-        x: -(scrollWidth - containerWidth),
-        duration: 100,
+      const distanceToScroll = scrollWidth - containerWidth;
+      const scrollSpeed = 40; // px per second
+      const duration = distanceToScroll / scrollSpeed;
+
+      const tween = gsap.to(container, {
+        x: -distanceToScroll,
+        duration: duration,
         ease: "none",
         repeat: -1,
       });
-    }
 
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
+      return () => {
+        tween.kill();
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      };
+    }
   }, []);
 
+  // Duplicate the data to simulate infinite loop
   const duplicatedTestimonials = [...testimonialData, ...testimonialData];
 
   return (
     <section className="relative w-full bg-background py-16 md:py-24 overflow-hidden">
-      {/* Background gradient using theme color via class */}
+      {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-gold/5 via-transparent to-transparent pointer-events-none" />
 
       <div className="container mx-auto px-6 lg:px-8 mb-12 relative">
@@ -63,7 +69,7 @@ const Testimonials: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* Testimonials container adjusted to match the navbar width */}
+      {/* Auto-scrolling testimonials row */}
       <div ref={scrollRef} className="relative w-full overflow-hidden">
         <div
           ref={containerRef}

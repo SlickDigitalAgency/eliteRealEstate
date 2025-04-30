@@ -12,7 +12,8 @@ import FeaturedProperties from "@/components/featuredProperties/FeaturedProperti
 import { propertiesData } from "@/constants/properties/PropertiesData";
 import AgentProfile from "@/components/agent/AgentProfile";
 import { agentProfileData } from "@/constants/agent/AgentProfileData";
-import Cta from "@/components/common/cta/Cta";
+import { ctaData } from "@/constants/ctaData/CtaData";
+import CTASection from "@/components/common/cta/Cta";
 
 const Home = () => {
   return (
@@ -27,7 +28,7 @@ const Home = () => {
       <FeaturedProperties properties={propertiesData} />
       <AgentProfile {...agentProfileData} />
       <Testimonials />
-      <Cta />
+      <CTASection data={ctaData} />
     </main>
   );
 };

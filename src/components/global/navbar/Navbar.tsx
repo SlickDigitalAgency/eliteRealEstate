@@ -5,36 +5,31 @@ import { NAV_LINKS } from "../../../constants/global/navbar/NavbarData";
 import { NavbarProps } from "../../../types/global/navbar/NavbarTypes";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ScheduleModal from "@/components/common/modal/SchedualModal";
 
 const Navbar = ({}: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [navbarBg, setNavbarBg] = useState("transparent");
 
-  // Track scrolling to change navbar background
+  const handleConsultationSubmit = (formData: any) => {
+    console.log("Consultation form submitted:", formData);
+    // Add form submission logic here
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       const heroSection = document.getElementById("hero-section");
-
       if (heroSection) {
         const heroBottom = heroSection.getBoundingClientRect().bottom;
-        // If the hero section is above the viewport, apply a transparent background
-        if (heroBottom > 0) {
-          setNavbarBg("transparent");
-        } else {
-          setNavbarBg("rgba(0, 0, 0, 0.8)"); // 80% transparent black background
-        }
+        setNavbarBg(heroBottom > 0 ? "transparent" : "rgba(0, 0, 0, 0.8)");
       }
     };
 
     window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initialize check
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as Element;
@@ -46,7 +41,6 @@ const Navbar = ({}: NavbarProps) => {
       }
     };
 
-    // Close menu when screen size changes
     const handleResize = () => {
       if (window.innerWidth >= 1024 && isMobileMenuOpen) {
         setIsMobileMenuOpen(false);
@@ -55,7 +49,6 @@ const Navbar = ({}: NavbarProps) => {
 
     document.addEventListener("click", handleClickOutside);
     window.addEventListener("resize", handleResize);
-
     return () => {
       document.removeEventListener("click", handleClickOutside);
       window.removeEventListener("resize", handleResize);
@@ -106,15 +99,20 @@ const Navbar = ({}: NavbarProps) => {
             ))}
           </div>
 
-          {/* Desktop CTA Button */}
+          {/* Desktop CTA Button with Modal Trigger */}
           <div className="hidden lg:flex items-center">
-            <Button
-              variant="outline"
-              className="flex items-center gap-2 border-gold text-gold hover:bg-gold hover:text-black transition-all duration-300"
-            >
-              <Phone className="w-4 h-4" />
-              <span>Schedule Consultation</span>
-            </Button>
+            <ScheduleModal
+              trigger={
+                <Button
+                  variant="outline"
+                  className="flex items-center gap-2 border-gold text-gold hover:bg-gold hover:text-black transition-all duration-300"
+                >
+                  <Phone className="w-4 h-4" />
+                  <span>Schedule Consultation</span>
+                </Button>
+              }
+              onSubmit={handleConsultationSubmit}
+            />
           </div>
 
           {/* Mobile Menu Button */}
@@ -162,10 +160,8 @@ const Navbar = ({}: NavbarProps) => {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="mobile-menu lg:hidden absolute top-full left-0 right-0 bg-dark-95 backdrop-blur-md border-t border-b border-gold-10"
-            style={{
-              boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-            }}
+            className="mobile-menu lg:hidden absolute top-full left-0 right-0 bg-black/80 backdrop-blur-md border-t border-b border-gold-10"
+            style={{ boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)" }}
           >
             <div className="container mx-auto px-6 py-6 flex flex-col space-y-6">
               {NAV_LINKS.map((link, index) => (
@@ -184,19 +180,25 @@ const Navbar = ({}: NavbarProps) => {
                   </Link>
                 </motion.div>
               ))}
+
+              {/* Mobile CTA Button with Modal Trigger */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.5 }}
               >
-                <Button
-                  variant="outline"
-                  className="w-full flex items-center justify-center gap-2 border-gold text-gold hover:bg-gold hover:text-black transition-all duration-300"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <Phone className="w-4 h-4" />
-                  <span>Schedule Consultation</span>
-                </Button>
+                <ScheduleModal
+                  trigger={
+                    <Button
+                      variant="outline"
+                      className="w-full flex items-center justify-center gap-2 border-gold text-gold hover:bg-gold hover:text-black transition-all duration-300"
+                    >
+                      <Phone className="w-4 h-4" />
+                      <span>Schedule Consultation</span>
+                    </Button>
+                  }
+                  onSubmit={handleConsultationSubmit}
+                />
               </motion.div>
             </div>
           </motion.div>
