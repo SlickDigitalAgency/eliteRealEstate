@@ -37,7 +37,7 @@ export default function AgentProfile({
           </div>
 
           <div>
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary-foreground mb-4">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-4">
               {name} <span className="text-primary">{title}</span>
             </h2>
             <div className="w-20 h-1 bg-primary mb-6"></div>
