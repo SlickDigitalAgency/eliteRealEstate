@@ -1,4 +1,8 @@
-import { StatisticType, AwardType, ChartDataType } from "@/types/redefiningLuxuryRealEstate/RedefiningLuxuryRealEstateTypes";
+import {
+  StatisticType,
+  AwardType,
+  ChartDataType,
+} from "@/types/brandStatement/brandStatementTypes";
 
 export const STATISTICS: StatisticType[] = [
   {
@@ -50,4 +54,5 @@ export const CHART_DATA: ChartDataType[] = [
   { category: "Client Satisfaction", value: 96 },
 ];
 
-export const EXCELLENCE_QUOTE = "Our commitment to excellence has established us as leaders in the luxury real estate market.";
+export const EXCELLENCE_QUOTE =
+  "Our commitment to excellence has established us as leaders in the luxury real estate market.";

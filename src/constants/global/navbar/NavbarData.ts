@@ -1,6 +1,6 @@
-import { NavLinkType } from "@/types/global/navbar/NavbarTypes";
+import { NavItem } from "@/types/global/navbar/NavbarTypes";
 
-export const NAV_LINKS: NavLinkType[] = [
+export const NAV_LINKS: NavItem[] = [
   {
     id: 1,
     label: "Properties",

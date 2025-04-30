@@ -1,9 +1,9 @@
-export interface NavLinkType {
+export interface NavItem {
   id: number;
   label: string;
   path: string;
 }
 
 export interface NavbarProps {
-  transparent?: boolean;
+  isScrolled: boolean;
 }

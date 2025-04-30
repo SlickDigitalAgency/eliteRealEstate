@@ -11,14 +11,14 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { RedefiningLuxuryRealEstateProps } from "@/types/redefiningLuxuryRealEstate/RedefiningLuxuryRealEstateTypes";
+import { BrandStatementProps } from "@/types/brandStatement/brandStatementTypes";
 
-const RedefiningLuxuryRealEstate = ({
+const BrandStatement = ({
   statistics,
   awards,
   chartData,
   quote,
-}: RedefiningLuxuryRealEstateProps) => {
+}: BrandStatementProps) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const decorativeLineRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
@@ -68,7 +68,7 @@ const RedefiningLuxuryRealEstate = ({
   return (
     <section
       ref={sectionRef}
-      className="py-20 md:py-32 px-6 md:px-12 lg:px-24 bg-[rgb(var(--color-black))]"
+      className="py-20 md:py-32 px-6 md:px-12 lg:px-24 bg-background"
     >
       <div className="max-w-[1400px] mx-auto">
         <motion.div
@@ -78,20 +78,20 @@ const RedefiningLuxuryRealEstate = ({
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-serif font-bold">
-            <span className="text-white">Redefining </span>
-            <span className="text-[rgb(var(--color-gold))]">Luxury </span>
-            <span className="text-white">Real Estate</span>
+            <span className="text-foreground">Redefining </span>
+            <span className="text-gold">Luxury </span>
+            <span className="text-foreground">Real Estate</span>
           </h2>
           <div className="relative mt-4 mb-6">
             <div
               ref={decorativeLineRef}
-              className="h-[2px] bg-[rgb(var(--color-gold))] mx-auto"
+              className="h-[2px] bg-gold mx-auto"
               style={{ maxWidth: "120px" }}
             />
           </div>
-          <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-            With unparalleled expertise and a commitment to excellence, we connect
-            extraordinary properties with extraordinary people.
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            With unparalleled expertise and a commitment to excellence, we
+            connect extraordinary properties with extraordinary people.
           </p>
         </motion.div>
 
@@ -106,21 +106,20 @@ const RedefiningLuxuryRealEstate = ({
                 <motion.div
                   key={stat.id}
                   variants={itemVariants}
-                  className="bg-[rgb(var(--color-dark))] p-6 rounded-lg shadow-lg border border-[rgb(var(--color-navy))/30]"
+                  className="bg-card p-6 rounded-lg shadow-lg border border-navy/30"
                 >
-                  <div className="text-2xl md:text-3xl font-bold text-[rgb(var(--color-gold))]">
+                  <div className="text-2xl md:text-3xl font-bold text-gold">
                     {stat.value}
                   </div>
-                  <div className="text-sm text-gray-300 mt-2">{stat.label}</div>
+                  <div className="text-sm text-muted-foreground mt-2">
+                    {stat.label}
+                  </div>
                 </motion.div>
               ))}
             </div>
 
-            <motion.div
-              variants={itemVariants}
-              className="mt-12"
-            >
-              <h3 className="text-2xl font-bold text-white mb-6">
+            <motion.div variants={itemVariants} className="mt-12">
+              <h3 className="text-2xl font-bold text-foreground mb-6">
                 Recognition & Awards
               </h3>
               <ul className="space-y-4">
@@ -130,11 +129,8 @@ const RedefiningLuxuryRealEstate = ({
                     variants={itemVariants}
                     className="flex items-start space-x-3"
                   >
-                    <Award
-                      size={20}
-                      className="text-[rgb(var(--color-gold))] mt-1"
-                    />
-                    <span className="text-gray-300">{award.text}</span>
+                    <Award size={20} className="text-gold mt-1" />
+                    <span className="text-muted-foreground">{award.text}</span>
                   </motion.li>
                 ))}
               </ul>
@@ -147,30 +143,25 @@ const RedefiningLuxuryRealEstate = ({
             animate={isInView ? "visible" : "hidden"}
             className="flex flex-col items-center justify-between h-full"
           >
-            <motion.div
-              variants={itemVariants}
-              className="w-full h-[400px]"
-            >
+            <motion.div variants={itemVariants} className="w-full h-[400px]">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart outerRadius="80%" data={chartData}>
-                  <PolarGrid
-                    stroke="rgb(var(--color-navy))"
-                  />
+                  <PolarGrid stroke="#1A1F35" /> {/* .text-navy */}
                   <PolarAngleAxis
                     dataKey="category"
-                    tick={{ fill: "rgb(255 255 255 / 0.8)", fontSize: 12 }}
+                    tick={{ fill: "#FFFFFFCC", fontSize: 12 }}
                   />
                   <PolarRadiusAxis
                     angle={30}
                     domain={[0, 100]}
-                    tick={{ fill: "rgb(255 255 255 / 0.8)" }}
+                    tick={{ fill: "#FFFFFFCC" }}
                   />
                   <Radar
                     name="Performance"
                     dataKey="value"
-                    stroke="rgb(var(--color-gold))"
-                    fill="rgb(var(--color-gold) / 0.2)"
-                    fillOpacity={0.6}
+                    stroke="#D4AF37"
+                    fill="#D4AF37"
+                    fillOpacity={0.2}
                   />
                 </RadarChart>
               </ResponsiveContainer>
@@ -178,7 +169,7 @@ const RedefiningLuxuryRealEstate = ({
 
             <motion.blockquote
               variants={itemVariants}
-              className="mt-8 text-gray-300 italic text-center"
+              className="mt-8 text-muted-foreground italic text-center"
             >
               "{quote}"
             </motion.blockquote>
@@ -189,4 +180,4 @@ const RedefiningLuxuryRealEstate = ({
   );
 };
 
-export default RedefiningLuxuryRealEstate;
+export default BrandStatement;

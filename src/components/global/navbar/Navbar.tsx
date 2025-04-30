@@ -1,228 +1,208 @@
-import { useEffect, useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Phone, Menu, X } from "lucide-react";
+import { NAV_LINKS } from "../../../constants/global/navbar/NavbarData";
+import { NavbarProps } from "../../../types/global/navbar/NavbarTypes";
+import { Menu, X, Phone } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-import { NAV_LINKS } from "@/constants/global/navbar/NavbarData";
-import { NavbarProps } from "@/types/global/navbar/NavbarTypes";
-import { cn } from "@/lib/utils";
+const Navbar = ({}: NavbarProps) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [navbarBg, setNavbarBg] = useState("transparent");
 
-const Navbar = ({ transparent = false }: NavbarProps) => {
-  const [scrolled, setScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  // Track scrolling to change navbar background
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 20;
-      if (isScrolled !== scrolled) {
-        setScrolled(isScrolled);
+      const heroSection = document.getElementById("hero-section");
+
+      if (heroSection) {
+        const heroBottom = heroSection.getBoundingClientRect().bottom;
+        // If the hero section is above the viewport, apply a transparent background
+        if (heroBottom > 0) {
+          setNavbarBg("transparent");
+        } else {
+          setNavbarBg("rgba(0, 0, 0, 0.8)"); // 80% transparent black background
+        }
       }
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [scrolled]);
+    handleScroll(); // Initialize check
 
-  useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
     return () => {
-      document.body.style.overflow = "unset";
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, [isMenuOpen]);
+  }, []);
 
-  const navVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-      },
-    },
-  };
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as Element;
+      if (
+        !target.closest(".mobile-menu") &&
+        !target.closest(".mobile-menu-button")
+      ) {
+        setIsMobileMenuOpen(false);
+      }
+    };
 
-  const navLinkVariants = {
-    hover: {
-      color: "#D4AF37",
-      transition: { duration: 0.3 },
-    },
-  };
+    // Close menu when screen size changes
+    const handleResize = () => {
+      if (window.innerWidth >= 1024 && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
+    };
 
-  const menuVariants = {
-    closed: {
-      opacity: 0,
-      x: "100%",
-      transition: {
-        duration: 0.3,
-        ease: "easeInOut",
-      },
-    },
-    open: {
-      opacity: 1,
-      x: "0%",
-      transition: {
-        duration: 0.3,
-        ease: "easeInOut",
-      },
-    },
-  };
+    document.addEventListener("click", handleClickOutside);
+    window.addEventListener("resize", handleResize);
 
-  const overlayVariants = {
-    closed: {
-      opacity: 0,
-      transition: {
-        duration: 0.3,
-      },
-    },
-    open: {
-      opacity: 1,
-      transition: {
-        duration: 0.3,
-      },
-    },
-  };
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isMobileMenuOpen]);
 
   return (
-    <motion.nav
-      initial="hidden"
-      animate="visible"
-      variants={navVariants}
-      className={cn(
-        "fixed w-full top-0 left-0 z-50 px-6 md:px-12 transition-all duration-300 ease-in-out",
-        {
-          // Apply a transparent background for mobile devices
-          "bg-transparent md:bg-transparent": !isMenuOpen && !scrolled,
-          "bg-[rgb(var(--color-dark))] backdrop-blur-sm shadow-lg":
-            !transparent || scrolled || isMenuOpen, // Apply dark background for scrolling or menu
-        }
-      )}
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-4 backdrop-blur-md ${
+        navbarBg === "transparent"
+          ? "bg-transparent"
+          : "bg-black/80 border-b border-gold-10"
+      }`}
     >
-      <div className="max-w-[1400px] mx-auto flex items-center justify-between h-20">
-        <Link
-          to="/"
-          className="flex items-center z-50"
-          onClick={() => setIsMenuOpen(false)}
-        >
-          <h1 className="text-2xl md:text-3xl font-serif">
-            <span className="text-[rgb(var(--color-gold))] font-normal">
-              ELITE
-            </span>
-            <span className="text-white font-bold ml-2">ESTATES</span>
-          </h1>
-        </Link>
-
-        <div className="hidden md:flex items-center justify-center space-x-8">
-          {NAV_LINKS.map((link) => (
-            <motion.div key={link.id} whileHover="hover">
-              <NavLink
-                to={link.path}
-                className={({ isActive }) =>
-                  cn(
-                    "text-sm uppercase tracking-wider relative hover:text-[rgb(var(--color-gold))] transition-colors duration-300",
-                    {
-                      "text-white": !isActive,
-                      "text-[rgb(var(--color-gold))]": isActive,
-                    }
-                  )
-                }
-              >
-                <motion.span variants={navLinkVariants}>
-                  {link.label}
-                </motion.span>
-              </NavLink>
-            </motion.div>
-          ))}
-        </div>
-
-        <Link to="/contact" className="hidden md:block">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-            className="flex items-center space-x-2 py-2 px-4 border border-[rgb(var(--color-gold))] rounded-md text-[rgb(var(--color-gold))] hover:bg-[rgb(var(--color-gold))/10] transition-all duration-300"
+      <div className="container mx-auto px-6">
+        <div className="flex justify-between items-center">
+          {/* Logo */}
+          <Link
+            to="/"
+            className="relative group"
+            onClick={() => setIsMobileMenuOpen(false)}
           >
-            <Phone size={16} />
-            <span className="text-sm tracking-wide">Schedule Consultation</span>
-          </motion.button>
-        </Link>
+            <h1 className="text-2xl md:text-3xl font-serif font-bold text-white tracking-wider">
+              <span className="text-gold">{`ELITE`}</span>{" "}
+              <span className="relative">
+                ESTATES
+                <motion.span
+                  className="absolute -bottom-1 left-0 w-0 h-[2px] bg-gold group-hover:w-full transition-all duration-300"
+                  initial={false}
+                  animate={{ width: "0%" }}
+                  whileHover={{ width: "100%" }}
+                />
+              </span>
+            </h1>
+          </Link>
 
-        <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="md:hidden text-white z-50 p-2 hover:bg-white/10 rounded-md transition-colors"
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-        >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center space-x-12">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.label}
+                to={link.path}
+                className="relative group text-sm font-medium text-white/90 hover:text-white transition-colors duration-300"
+              >
+                {link.label}
+                <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-gold group-hover:w-full transition-all duration-300" />
+              </Link>
+            ))}
+          </div>
+
+          {/* Desktop CTA Button */}
+          <div className="hidden lg:flex items-center">
+            <Button
+              variant="outline"
+              className="flex items-center gap-2 border-gold text-gold hover:bg-gold hover:text-black transition-all duration-300"
+            >
+              <Phone className="w-4 h-4" />
+              <span>Schedule Consultation</span>
+            </Button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden mobile-menu-button p-2 text-white/90 hover:text-white transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsMobileMenuOpen(!isMobileMenuOpen);
+            }}
+            aria-label="Toggle menu"
+            aria-expanded={isMobileMenuOpen}
+          >
+            <AnimatePresence mode="wait">
+              {isMobileMenuOpen ? (
+                <motion.div
+                  key="close"
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <X className="w-6 h-6" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="menu"
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Menu className="w-6 h-6" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </button>
+        </div>
       </div>
 
+      {/* Mobile Menu */}
       <AnimatePresence>
-        {isMenuOpen && (
-          <>
-            <motion.div
-              initial="closed"
-              animate="open"
-              exit="closed"
-              variants={overlayVariants}
-              className="fixed inset-0 bg-black/100 md:hidden z-40"
-              onClick={() => setIsMenuOpen(false)}
-            />
-            <motion.div
-              initial="closed"
-              animate="open"
-              exit="closed"
-              variants={menuVariants}
-              className="fixed inset-y-0 right-0 w-[300px] bg-[rgb(var(--color-dark))] shadow-xl md:hidden z-40 flex flex-col"
-            >
-              <div className="flex flex-col items-start p-6 h-full bg-black/100">
-                <div className="w-full space-y-6 mt-16">
-                  {NAV_LINKS.map((link) => (
-                    <NavLink
-                      key={link.id}
-                      to={link.path}
-                      onClick={() => setIsMenuOpen(false)}
-                      className={({ isActive }) =>
-                        cn(
-                          "block w-full py-2 text-lg font-medium tracking-wide transition-colors duration-300",
-                          {
-                            "text-white hover:text-[rgb(var(--color-gold))]":
-                              !isActive,
-                            "text-[rgb(var(--color-gold))]": isActive,
-                          }
-                        )
-                      }
-                    >
-                      {link.label}
-                    </NavLink>
-                  ))}
-                </div>
-
-                <div className="mt-auto w-full pb-8">
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="mobile-menu lg:hidden absolute top-full left-0 right-0 bg-dark-95 backdrop-blur-md border-t border-b border-gold-10"
+            style={{
+              boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <div className="container mx-auto px-6 py-6 flex flex-col space-y-6">
+              {NAV_LINKS.map((link, index) => (
+                <motion.div
+                  key={link.label}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                >
                   <Link
-                    to="/contact"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block w-full"
+                    to={link.path}
+                    className="text-white/90 hover:text-white hover:translate-x-2 transition-all duration-300 block"
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <motion.button
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full flex items-center justify-center space-x-2 py-3 border border-[rgb(var(--color-gold))] rounded-md text-[rgb(var(--color-gold))] hover:bg-[rgb(var(--color-gold))/10] transition-all duration-300"
-                    >
-                      <Phone size={16} />
-                      <span className="text-sm tracking-wide">
-                        Schedule Consultation
-                      </span>
-                    </motion.button>
+                    {link.label}
                   </Link>
-                </div>
-              </div>
-            </motion.div>
-          </>
+                </motion.div>
+              ))}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.5 }}
+              >
+                <Button
+                  variant="outline"
+                  className="w-full flex items-center justify-center gap-2 border-gold text-gold hover:bg-gold hover:text-black transition-all duration-300"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Phone className="w-4 h-4" />
+                  <span>Schedule Consultation</span>
+                </Button>
+              </motion.div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </nav>
   );
 };
 

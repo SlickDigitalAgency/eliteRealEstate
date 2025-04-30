@@ -14,7 +14,7 @@ export interface ChartDataType {
   value: number;
 }
 
-export interface RedefiningLuxuryRealEstateProps {
+export interface BrandStatementProps {
   statistics: StatisticType[];
   awards: AwardType[];
   chartData: ChartDataType[];
